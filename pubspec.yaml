@@ -1,0 +1,52 @@
+name: controlle_vencimentos
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get: ^4.6.6
+  get_storage: ^2.1.1
+  flutter_native_splash: ^2.4.1
+  intl:
+
+
+
+
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.1
+
+  
+flutter_icons:
+  image_path: "assets/icons/icon.png"
+  android: "ic_launcher"
+  ios: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/logos/logo_foreground.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  remove_alpha_channel_ios: true
+  remove_alpha_ios: true
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/icons/icon.png
+  branding: assets/icons/icon.png
+  color_dark: "#ffffff"
+  image_dark: assets/icons/icon.png
+  branding_dark: assets/icons/icon.png
+  android: true
+  ios: true
+
+
+flutter:
+  uses-material-design: true
