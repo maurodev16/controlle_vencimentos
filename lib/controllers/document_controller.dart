@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 class DocumentController extends GetxController {
   var documents = <DocumentModel>[].obs;
   final DocumentStorageService storageService = DocumentStorageService();
+  // Método para calcular o total dos preços
+  double get totalPrice => documents.fold(0, (sum, item) => sum + item.price);
 
   @override
   void onInit() async{

@@ -2,9 +2,11 @@ import 'package:controlle_vencimentos/bindings/all_bindings.dart';
 import 'package:controlle_vencimentos/views/document_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() {
   runApp(const MainApp());
+  GetStorage.init();
 }
 
 class MainApp extends StatelessWidget {
@@ -12,9 +14,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  GetMaterialApp(
-      initialBinding: AllBinding(),
-      home: DocumentListScreen()
-    );
+    return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialBinding: MyBinding(),
+        home: DocumentListScreen());
   }
 }
