@@ -1,36 +1,41 @@
+import 'package:controlle_vencimentos/models/category_model.dart';
+
 class DocumentModel {
-  String id;
-  String name;
-  DateTime dueDate;
-  String category;
-  double price;
+  String? id;
+  String? name;
+  DateTime? dueDate;
+  CategoryModel? category; // A categoria agora é um CategoryModel
+  double? price;
 
   DocumentModel({
-    required this.id,
-    required this.name,
-    required this.dueDate,
-    required this.category,
+    this.id,
+    this.name,
+    this.dueDate,
+    this.category,
     this.price = 0.0,
   });
 
-  // Converte o objeto DocumentModel para um Map (JSON)
+  // Converte DocumentModel para Map (JSON)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'dueDate': dueDate.toIso8601String(), // Convertendo DateTime para String
-      'category': category,
+      'dueDate': dueDate!.toIso8601String(),
+      'category':
+          category?.toJson(), // Aqui estamos armazenando a categoria como Map
       'price': price,
     };
   }
 
-  // Converte um Map (JSON) para um objeto DocumentModel
+  // Converte Map (JSON) para DocumentModel
   factory DocumentModel.fromJson(Map<String, dynamic> json) {
     return DocumentModel(
       id: json['id'],
       name: json['name'],
-      dueDate: DateTime.parse(json['dueDate']), // Convertendo String para DateTime
-      category: json['category'],
+      dueDate: DateTime.parse(json['dueDate']),
+      category: json['category'] != null
+          ? CategoryModel.fromJson(json['category'])
+          : null,
       price: json['price'] ?? 0.0,
     );
   }
