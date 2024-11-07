@@ -4,20 +4,19 @@ import 'package:intl/intl.dart';
 
 import '../models/documents_model.dart';
 import '../services/document_storage_service.dart';
+import '../views/enums.dart';
 import 'category_controller.dart';
 
 class DocumentController extends GetxController {
-  final nameController = TextEditingController();
-  final dueDateController = TextEditingController();
-  final priceController = TextEditingController();
+  RxString name_txt = "".obs;
+  RxString dueDate_txt = "".obs;
+  RxDouble price_txt = 0.0.obs;
+  final dateFormat = DateFormat('dd/MM/yyyy');
   RxBool loading = false.obs;
   var documents = <DocumentModel>[].obs;
-  final DocumentStorageService storageService = DocumentStorageService();
-  final CategoryController categoryContr = Get.find();
-  final categoryController = CategoryController();
+  final storageService = DocumentStorageService();
+  final categoryController = Get.find<CategoryController>();
   RxList<DocumentModel> filteredDocuments = <DocumentModel>[].obs;
-
-  final dateFormat = DateFormat('dd/MM/yyyy');
 
   @override
   void onInit() async {
@@ -40,8 +39,8 @@ class DocumentController extends GetxController {
           document.category?.name == categoryController.selectedCategory.value;
 
       bool matchesDueDate = true;
-      if (dueDateController.text.isNotEmpty) {
-        final dueDateFilter = dueDateController.text;
+      if (dueDate_txt.value.isNotEmpty) {
+        final dueDateFilter = dueDate_txt.value;
         if (dueDateFilter == 'Vencidos') {
           matchesDueDate = document.dueDate!.isBefore(DateTime.now());
         } else if (dueDateFilter == 'A Vencer') {
@@ -67,26 +66,19 @@ class DocumentController extends GetxController {
   Future<void> addDocument() async {
     loading.value = true;
     try {
-      if (nameController.text.isEmpty ||
-          dueDateController.text.isEmpty ||
-          priceController.text.isEmpty) {
+      if (name_txt.value.isEmpty || dueDate_txt.value.isEmpty) {
         throw Exception('Todos os campos são obrigatórios');
-      }
-
-      final parsedPrice = double.tryParse(priceController.text);
-      if (parsedPrice == null) {
-        throw Exception('Preço inválido');
       }
 
       DateTime parsedDueDate;
       try {
-        parsedDueDate = dateFormat.parseStrict(dueDateController.text);
+        parsedDueDate = dateFormat.parseStrict(dueDate_txt.value);
       } catch (_) {
         throw Exception('Data de vencimento inválida');
       }
 
       // Obtendo a categoria selecionada como um CategoryModel
-      final selectedCategory = categoryContr.selectedCategory.value;
+      final selectedCategory = categoryController.selectedCategory.value;
 
       if (selectedCategory == null) {
         throw Exception('Categoria não selecionada');
@@ -94,10 +86,10 @@ class DocumentController extends GetxController {
 
       // Criando o novo documento
       final newDocument = DocumentModel(
-        name: nameController.text,
+        name: name_txt.value,
         dueDate: parsedDueDate,
-        category: selectedCategory, // Agora é um CategoryModel
-        price: parsedPrice,
+        category: selectedCategory,
+        price: price_txt.value,
       );
 
       documents.add(newDocument);
@@ -114,6 +106,23 @@ class DocumentController extends GetxController {
       Get.snackbar('Erro', e.toString());
     } finally {
       loading.value = false;
+    }
+  }
+
+  void inputValidation() {}
+
+// Função para obter o status do documento com base na data de vencimento
+  DocumentStatus getDocumentStatus(DateTime dueDate) {
+    update();
+    final now = DateTime.now();
+    if (dueDate.isBefore(now)) {
+      return DocumentStatus.EXPIRED;
+    } else if (dueDate.year == now.year &&
+        dueDate.month == now.month &&
+        dueDate.day == now.day) {
+      return DocumentStatus.DUETODAY;
+    } else {
+      return DocumentStatus.UPCOMING;
     }
   }
 

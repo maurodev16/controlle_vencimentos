@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:controlle_vencimentos/controllers/document_controller.dart';
 import 'package:controlle_vencimentos/controllers/category_controller.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +107,20 @@ class CreateDocumentScreen extends StatelessWidget {
                     if (_formKey.currentState!.validate()) {
                       // Criar um novo documento
                       documentController.addDocument();
+                      AwesomeDialog(
+                        context: context,
+                        animType: AnimType.scale,
+                        dialogType: DialogType.info,
+                        body: Center(
+                          child: Text(
+                            'If the body is specified, then title and description will be ignored, this allows to 											further customize the dialogue.',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        title: 'This is Ignored',
+                        desc: 'This is also Ignored',
+                        btnOkOnPress: () {},
+                      )..show();
                     }
                   },
                   child: Text('Adicionar Documento'),
